@@ -5,8 +5,8 @@ O site tem duas partes:
 - **a loja** — arquivos HTML, CSS, JavaScript e imagens;
 - **o painel e o checkout** — PHP, que precisa de servidor.
 
-A Hostinger roda as duas. **Requisito: PHP 8.1 ou superior** (a Hostinger já vem com
-8.2 ou 8.3, e dá para escolher no hPanel em *Avançado → Configuração do PHP*).
+A Hostinger roda as duas. **Requisito: PHP 8.0 ou superior** (a Hostinger já vem com 8.2 ou 8.3; dá para
+conferir e trocar no hPanel em *Avançado → Configuração do PHP*).
 
 ---
 
@@ -145,6 +145,6 @@ Hostinger tem backup automático nos planos maiores, mas não conte só com ele.
 
 ## Outras hospedagens
 
-Se um dia sair da Hostinger, qualquer hospedagem com **PHP 8.1+** serve (Locaweb,
+Se um dia sair da Hostinger, qualquer hospedagem com **PHP 8.0+** serve (Locaweb,
 KingHost, Hostgator). Só não dá para usar hospedagem de site estático (GitHub Pages,
 Netlify) **com o painel**: lá a loja funcionaria, mas o checkout e o painel, não.

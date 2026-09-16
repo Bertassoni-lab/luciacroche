@@ -45,7 +45,7 @@ php -S localhost:8000
 # painel: http://localhost:8000/painel
 ```
 
-Precisa de **PHP 8.1 ou superior** para o painel e o checkout. Só a loja (sem
+Precisa de **PHP 8.0 ou superior** para o painel e o checkout. Só a loja (sem
 checkout e sem painel) abre até clicando duas vezes em `index.html`.
 
 ## Antes de publicar
@@ -146,7 +146,7 @@ passo natural — os dados já estão separados da apresentação.
 | Item | Custo |
 |---|---:|
 | Domínio `.com.br` | R$ 40/ano |
-| Hospedagem Hostinger (PHP 8.1+) | a partir de ~R$ 10/mês |
+| Hospedagem Hostinger (PHP 8.0+) | a partir de ~R$ 10/mês |
 | Comissão por venda no Pix | **R$ 0** |
 | Cartão pelo Mercado Pago (opcional) | ~4,5% só quando usado |
 | **Total** | **~R$ 160/ano** |
