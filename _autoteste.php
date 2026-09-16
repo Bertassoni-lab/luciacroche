@@ -4,6 +4,16 @@
 
 declare(strict_types=1);
 
+// Guarda tudo o que for impresso, para gravar também em arquivo —
+// assim o resultado pode ser lido mesmo sem a saída do cron.
+ob_start();
+register_shutdown_function(function () {
+    $texto = ob_get_clean();
+    echo $texto;
+    @file_put_contents(__DIR__ . '/dados-privados/autoteste.txt',
+        date('c') . "\n" . $texto);
+});
+
 $base = 'https://croche.okgo.dev.br';
 $raiz = __DIR__;
 $ok = 0; $falhas = 0;
