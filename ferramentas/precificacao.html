@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de preço · Lúcia Maria Crochê</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/marca/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<main class="secao">
+<div class="env ferramenta">
+  <p><a href="../index.html">← Voltar para a loja</a></p>
+  <h1>Quanto cobrar por esta peça</h1>
+  <p>Ferramenta de uso interno. Ela responde a pergunta que mais dá prejuízo no artesanato:
+  <strong>o preço que eu cobro paga o meu tempo?</strong></p>
+
+  <form id="calc">
+    <h2 style="font-size:1.25rem;margin-top:30px">Material</h2>
+    <div class="ferramenta__dupla">
+      <div>
+        <label for="gramas">Barbante usado (gramas)</label>
+        <input id="gramas" type="number" min="0" step="10" value="550">
+      </div>
+      <div>
+        <label for="precoKg">Preço do barbante por quilo (R$)</label>
+        <input id="precoKg" type="number" min="0" step="1" value="78">
+      </div>
+    </div>
+    <div class="ferramenta__dupla">
+      <div>
+        <label for="aviamentos">Aviamentos: alça, argola, forro, etiqueta (R$)</label>
+        <input id="aviamentos" type="number" min="0" step="1" value="0">
+      </div>
+      <div>
+        <label for="perda">Perda e sobra de fio (%)</label>
+        <input id="perda" type="number" min="0" max="50" step="1" value="8">
+      </div>
+    </div>
+
+    <h2 style="font-size:1.25rem;margin-top:30px">Trabalho</h2>
+    <div class="ferramenta__dupla">
+      <div>
+        <label for="horas">Horas de crochê nesta peça</label>
+        <input id="horas" type="number" min="0" step="0.5" value="18">
+      </div>
+      <div>
+        <label for="valorHora">Quanto vale a sua hora (R$)</label>
+        <input id="valorHora" type="number" min="0" step="1" value="18">
+      </div>
+    </div>
+    <p style="font-size:.88rem;color:var(--tinta-media)">Referência: o salário mínimo por hora fica perto de R$ 9. Abaixo disso, a peça está pagando menos que um emprego formal. R$ 18 a R$ 25 é um valor honesto para trabalho manual com técnica.</p>
+
+    <h2 style="font-size:1.25rem;margin-top:30px">Custos do negócio</h2>
+    <div class="ferramenta__dupla">
+      <div>
+        <label for="fixos">Custo fixo rateado por peça (R$)</label>
+        <input id="fixos" type="number" min="0" step="1" value="8">
+      </div>
+      <div>
+        <label for="margem">Margem de lucro sobre o custo (%)</label>
+        <input id="margem" type="number" min="0" step="5" value="35">
+      </div>
+    </div>
+    <p style="font-size:.88rem;color:var(--tinta-media)">Custo fixo por peça = (barraca + transporte + embalagem + internet do mês) ÷ peças vendidas no mês. A margem é o que sobra para comprar barbante novo e crescer — não é o pagamento da Lúcia, que já foi contado nas horas.</p>
+
+    <h2 style="font-size:1.25rem;margin-top:30px">Onde você vai vender</h2>
+    <div class="ferramenta__dupla">
+      <div>
+        <label for="taxaPct">Comissão do canal (%)</label>
+        <input id="taxaPct" type="number" min="0" step="0.5" value="20">
+      </div>
+      <div>
+        <label for="taxaFixa">Taxa fixa por item vendido (R$)</label>
+        <input id="taxaFixa" type="number" min="0" step="0.5" value="4">
+      </div>
+    </div>
+    <p style="font-size:.88rem;color:var(--tinta-media)">Feira e site próprio: 0% e R$ 0. Shopee e Elo7 em 2026: por volta de 18% a 20% mais taxa fixa por item. Maquininha de cartão: 3% a 5%.</p>
+  </form>
+
+  <div class="ferramenta__saida">
+    <h2 style="margin-top:0;font-size:1.3rem">Resultado</h2>
+    <table class="tabela">
+      <tbody>
+        <tr><th>Barbante</th><td id="r-fio">—</td></tr>
+        <tr><th>Aviamentos</th><td id="r-aviamentos">—</td></tr>
+        <tr><th>Seu trabalho</th><td id="r-trabalho">—</td></tr>
+        <tr><th>Custo fixo</th><td id="r-fixos">—</td></tr>
+        <tr><th>Custo total da peça</th><td id="r-custo"><strong>—</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin:24px 0 2px;font-weight:600">Preço de venda direta (feira, WhatsApp, site próprio)</p>
+    <p class="ferramenta__num" id="r-direto">—</p>
+
+    <p style="margin:18px 0 2px;font-weight:600">Preço no marketplace, para sobrar o mesmo</p>
+    <p class="ferramenta__num" id="r-marketplace">—</p>
+
+    <div id="r-aviso"></div>
+
+    <table class="tabela" style="margin-top:22px">
+      <tbody>
+        <tr><th>Se vender pelo preço direto, sua hora vale</th><td id="r-hora-direto">—</td></tr>
+        <tr><th>Preço mínimo que não dá prejuízo</th><td id="r-minimo">—</td></tr>
+        <tr><th>Peças por mês para tirar 1 salário mínimo</th><td id="r-volume">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:.85rem;color:var(--tinta-fraca);margin-top:24px">Esta página não vai para o Google e não aparece no menu da loja. É só de vocês.</p>
+</div>
+</main>
+
+<script>
+(function () {
+  var SALARIO_MINIMO = 1621; // ajuste quando mudar
+  var campos = ["gramas","precoKg","aviamentos","perda","horas","valorHora","fixos","margem","taxaPct","taxaFixa"];
+  function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+  function moeda(n) { return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+  function põe(id, txt) { document.getElementById(id).innerHTML = txt; }
+
+  function calcular() {
+    var fio = (v("gramas") / 1000) * v("precoKg") * (1 + v("perda") / 100);
+    var trabalho = v("horas") * v("valorHora");
+    var custo = fio + v("aviamentos") + trabalho + v("fixos");
+    var direto = custo * (1 + v("margem") / 100);
+
+    // No marketplace o preço precisa absorver comissão e taxa fixa:
+    // preço × (1 - taxa%) - taxaFixa = direto
+    var divisor = 1 - v("taxaPct") / 100;
+    var marketplace = divisor > 0 ? (direto + v("taxaFixa")) / divisor : 0;
+
+    var horaReal = v("horas") > 0 ? (direto - fio - v("aviamentos") - v("fixos")) / v("horas") : 0;
+
+    põe("r-fio", moeda(fio));
+    põe("r-aviamentos", moeda(v("aviamentos")));
+    põe("r-trabalho", moeda(trabalho) + " <span style='color:var(--tinta-fraca)'>(" + v("horas") + "h × " + moeda(v("valorHora")) + ")</span>");
+    põe("r-fixos", moeda(v("fixos")));
+    põe("r-custo", "<strong>" + moeda(custo) + "</strong>");
+    põe("r-direto", moeda(direto));
+    põe("r-marketplace", divisor > 0 ? moeda(marketplace) : "comissão impossível");
+    põe("r-hora-direto", moeda(horaReal) + " por hora");
+    põe("r-minimo", moeda(custo) + " <span style='color:var(--tinta-fraca)'>(custo cheio, sem lucro nenhum)</span>");
+
+    var lucroPorPeca = direto - custo + trabalho; // o que entra no bolso da família
+    var pecas = lucroPorPeca > 0 ? Math.ceil(SALARIO_MINIMO / lucroPorPeca) : 0;
+    var horasMes = pecas * v("horas");
+    põe("r-volume", pecas + " peças por mês <span style='color:var(--tinta-fraca)'>(cerca de " +
+      Math.round(horasMes) + " horas de crochê, ou " + (horasMes / 22).toFixed(1) + " h por dia útil)</span>");
+
+    var aviso = "";
+    if (horaReal < 9) {
+      aviso = '<p class="aviso" style="border-left-color:var(--terracota)"><strong>Atenção:</strong> por este preço a hora de trabalho fica em ' +
+        moeda(horaReal) + ', abaixo do salário mínimo por hora. Ou o preço sobe, ou a peça precisa ficar mais rápida de fazer.</p>';
+    } else if (horasMes > 220) {
+      aviso = '<p class="aviso"><strong>Conta de realidade:</strong> ' + Math.round(horasMes) +
+        ' horas de crochê por mês é mais do que uma pessoa sozinha consegue sustentar. Para chegar lá é preciso subir o preço, vender peças mais rápidas ou ter mais mãos.</p>';
+    }
+    document.getElementById("r-aviso").innerHTML = aviso;
+  }
+
+  campos.forEach(function (id) { document.getElementById(id).addEventListener("input", calcular); });
+  calcular();
+})();
+</script>
+</body>
+</html>

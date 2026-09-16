@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /ferramentas/
+
+Sitemap: https://luciamariacroche.com.br/sitemap.xml

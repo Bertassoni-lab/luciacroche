@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadastrar uma peça · Lúcia Maria Crochê</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/marca/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<main class="secao">
+<div class="env ferramenta">
+  <p><a href="../index.html">← Voltar para a loja</a></p>
+  <h1>Cadastrar uma peça nova</h1>
+  <p>Preencha os campos, copie o texto que aparece no fim da página e cole dentro do arquivo
+  <code>dados/produtos.js</code>, logo depois do <code>"produtos": [</code>.
+  Não precisa entender de programação — é copiar e colar.</p>
+
+  <form id="form">
+    <div class="ferramenta__dupla">
+      <div><label for="nome">Nome da peça</label><input id="nome" value="Bolsa Tote Azul"></div>
+      <div><label for="categoria">Categoria</label>
+        <select id="categoria">
+          <option value="bolsas">Bolsas</option>
+          <option value="tapetes">Tapetes</option>
+          <option value="roupas">Roupas</option>
+          <option value="acessorios">Acessórios</option>
+        </select>
+      </div>
+    </div>
+    <div class="ferramenta__dupla">
+      <div><label for="preco">Preço no site (R$)</label><input id="preco" type="number" step="1" value="189"></div>
+      <div><label for="precoFeira">Preço na feira (R$)</label><input id="precoFeira" type="number" step="1" value="160"></div>
+    </div>
+    <div class="ferramenta__dupla">
+      <div><label for="disponibilidade">Disponibilidade</label>
+        <select id="disponibilidade">
+          <option value="pronta-entrega">Pronta-entrega</option>
+          <option value="sob-encomenda">Sob encomenda</option>
+        </select>
+      </div>
+      <div><label for="colecao">Coleção</label>
+        <select id="colecao"><option value="Lúcia">Lúcia</option><option value="Aurora">Aurora (cores escolhidas pela Aurora)</option></select>
+      </div>
+    </div>
+
+    <label for="resumo">Frase curta (aparece na listagem)</label>
+    <input id="resumo" value="Ponto vazado em barbante azul, alça de ombro.">
+
+    <label for="descricao">Descrição (conte a história da peça, o que ela cabe, como é feita)</label>
+    <textarea id="descricao" style="font-family:var(--sans);font-size:.95rem">A bolsa que a Lúcia mais repete.</textarea>
+
+    <div class="ferramenta__dupla">
+      <div><label for="medidas">Medidas</label><input id="medidas" value="36 cm × 40 cm · alça de 55 cm"></div>
+      <div><label for="materiais">Materiais</label><input id="materiais" value="100% barbante de algodão nº 6"></div>
+    </div>
+    <div class="ferramenta__dupla">
+      <div><label for="cores">Cores (separadas por vírgula)</label><input id="cores" value="Azul"></div>
+      <div><label for="tempo">Tempo de produção</label><input id="tempo" value="14 a 18 horas de trabalho"></div>
+    </div>
+    <div class="ferramenta__dupla">
+      <div><label for="peso">Peso em gramas (para calcular o frete)</label><input id="peso" type="number" value="520"></div>
+      <div><label for="arquivo">Nome do arquivo da foto (sem pasta)</label><input id="arquivo" value="bolsa-tote-azul.jpg"></div>
+    </div>
+    <label for="alt">Descrição da foto (para quem não enxerga e para o Google)</label>
+    <input id="alt" value="Bolsa de crochê azul em ponto vazado, com duas alças de ombro">
+    <label><input type="checkbox" id="destaque" style="width:auto;margin-right:8px">Mostrar na página inicial</label>
+  </form>
+
+  <div class="ferramenta__saida">
+    <h2 style="margin-top:0;font-size:1.25rem">Cole este trecho no arquivo <code>dados/produtos.js</code></h2>
+    <textarea id="saida" readonly rows="22" aria-label="Texto gerado"></textarea>
+    <p style="margin-top:14px"><button class="botao botao--principal" type="button" id="copiar">Copiar</button>
+    <span id="feito" style="margin-left:12px;color:var(--verde);font-weight:600"></span></p>
+    <ol style="font-size:.92rem;color:var(--tinta-media);margin-top:18px">
+      <li>Salve a foto quadrada em <code>assets/img/produtos/</code> com o nome que você escreveu acima.</li>
+      <li>Salve também uma versão menor com <code>-600</code> no fim do nome (ex.: <code>bolsa-tote-azul-600.jpg</code>). Se não tiver, o site usa a foto grande mesmo.</li>
+      <li>Abra <code>dados/produtos.js</code>, cole o trecho logo depois de <code>"produtos": [</code> e salve.</li>
+      <li>Envie os arquivos para o site.</li>
+    </ol>
+  </div>
+</div>
+</main>
+
+<script>
+(function () {
+  var ids = ["nome","categoria","preco","precoFeira","disponibilidade","colecao","resumo","descricao",
+             "medidas","materiais","cores","tempo","peso","arquivo","alt","destaque"];
+  function el(id) { return document.getElementById(id); }
+  function val(id) { var e = el(id); return e.type === "checkbox" ? e.checked : e.value; }
+
+  function apelido(texto) {
+    return texto.toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function gerar() {
+    var arquivo = val("arquivo").trim();
+    var base = arquivo.replace(/\.[a-z]+$/i, "");
+    var ext = (arquivo.match(/\.[a-z]+$/i) || [".jpg"])[0];
+    var obj = {
+      id: apelido(val("nome")),
+      nome: val("nome"),
+      categoria: val("categoria"),
+      colecao: val("colecao"),
+      preco: Number(val("preco")),
+      precoFeira: Number(val("precoFeira")),
+      imagem: arquivo ? "assets/img/produtos/" + arquivo : "",
+      thumb: arquivo ? "assets/img/produtos/" + base + "-600" + ext : "",
+      alt: val("alt"),
+      resumo: val("resumo"),
+      descricao: val("descricao"),
+      medidas: val("medidas"),
+      materiais: val("materiais"),
+      cores: val("cores").split(",").map(function (c) { return c.trim(); }).filter(Boolean),
+      tempoProducao: val("tempo"),
+      pesoGramas: Number(val("peso")),
+      disponibilidade: val("disponibilidade"),
+      destaque: val("destaque"),
+      tags: []
+    };
+    if (obj.disponibilidade === "sob-encomenda") obj.prazoEncomendaDias = 15;
+
+    var texto = JSON.stringify(obj, null, 2)
+      .split("\n").map(function (l, i) { return i === 0 ? "    " + l : "    " + l; }).join("\n");
+    el("saida").value = texto + ",";
+  }
+
+  ids.forEach(function (id) {
+    el(id).addEventListener("input", gerar);
+    el(id).addEventListener("change", gerar);
+  });
+
+  el("copiar").addEventListener("click", function () {
+    el("saida").select();
+    navigator.clipboard.writeText(el("saida").value).then(function () {
+      el("feito").textContent = "Copiado!";
+      setTimeout(function () { el("feito").textContent = ""; }, 2500);
+    }, function () {
+      document.execCommand("copy");
+      el("feito").textContent = "Copiado!";
+    });
+  });
+
+  gerar();
+})();
+</script>
+</body>
+</html>
