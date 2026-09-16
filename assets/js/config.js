@@ -9,18 +9,23 @@ window.LOJA = {
   nome: "Lúcia Maria Crochê",
   assinatura: "Feito à mão por Lúcia e Aurora · Boiçucanga, litoral norte de SP",
 
-  /* ---- Contato (TROCAR) ------------------------------------ */
+  /* ---- Contato --------------------------------------------- */
   // Número no formato internacional, só dígitos: 55 + DDD + número
-  whatsapp: "5512900000000",
+  whatsapp: "5512996148324",
+  whatsappVisivel: "(12) 99614-8324",
   instagram: "luciamariacroche",
   email: "contato@luciamariacroche.com.br",
 
   /* ---- Pagamento (TROCAR) ---------------------------------- */
   pix: {
-    chave: "000.000.000-00",
-    tipoChave: "CPF",
-    favorecido: "Lúcia Maria (nome completo do titular)",
-    banco: "Banco do titular"
+    // Chave do tipo celular, no formato exigido pelo Banco Central: +55DDNNNNNNNNN
+    chave: "+5512996148324",
+    tipoChave: "Celular",
+    // Nome que aparece para o cliente no aplicativo do banco (máx. 25 caracteres)
+    favorecido: "DRISANA HOLLAND",
+    cidade: "SAO SEBASTIAO",
+    // Aviso mostrado no checkout para o cliente não estranhar o nome do recebedor
+    observacao: "O Pix é recebido por Drisana Holland, mãe da Aurora e responsável financeira do ateliê."
   },
   // Desconto oferecido para quem paga no Pix (0.05 = 5%)
   descontoPix: 0.05,

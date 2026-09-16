@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /ferramentas/
+Disallow: /painel/
+Disallow: /api/
+Disallow: /dados-privados/
+Disallow: /checkout.html
 
 Sitemap: https://luciamariacroche.com.br/sitemap.xml

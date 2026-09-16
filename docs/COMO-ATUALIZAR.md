@@ -134,3 +134,23 @@ Não aparecem no menu e não vão para o Google. São de uso interno:
   sobra por hora de trabalho. Use antes de fechar encomenda grande.
 - **`ferramentas/cadastro.html`** — monta o texto de uma peça nova para colar no
   catálogo.
+
+---
+
+## E o painel?
+
+Muita coisa que este guia explica dá para fazer sem abrir arquivo nenhum, direto em
+**luciamariacroche.com.br/painel**:
+
+| No painel dá para | Onde |
+|---|---|
+| Acompanhar pedidos e marcar como pago/enviado | Pedidos |
+| Lançar despesas e ver quanto sobrou | Financeiro |
+| Chamar de volta quem sumiu, criar campanha, gerar o QR da barraca | Marketing |
+| Escrever e publicar no diário | Diário |
+| Trocar a senha | `painel/senha.php` |
+
+**O que ainda precisa de arquivo:** cadastrar peça nova, mudar preço, trocar foto e
+alterar os textos das páginas. É o que este guia explica.
+
+Leia o [guia do painel](PAINEL.md) para os detalhes.

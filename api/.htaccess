@@ -1,0 +1,8 @@
+# Só os endpoints podem ser chamados. config.php e as bibliotecas, não.
+<FilesMatch "^(config|lib|catalogo|mercadopago)\.php$">
+  Require all denied
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

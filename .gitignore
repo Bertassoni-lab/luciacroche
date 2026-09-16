@@ -1,0 +1,7 @@
+# Dados reais do negócio: pedidos, clientes, despesas e textos.
+# Ficam só no servidor — nunca no repositório.
+dados-privados/*.json
+
+# Sistema
+.DS_Store
+Thumbs.db

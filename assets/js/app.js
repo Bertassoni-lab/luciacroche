@@ -105,6 +105,7 @@
     { href: "produtos.html", rotulo: "Produtos" },
     { href: "sobre.html", rotulo: "A Lúcia e a Aurora" },
     { href: "feiras.html", rotulo: "Feiras" },
+    { href: "blog.html", rotulo: "Diário" },
     { href: "cuidados.html", rotulo: "Cuidados e trocas" }
   ];
 
@@ -426,11 +427,11 @@
             (temEncomenda ? '<p class="aviso" style="margin-top:20px"><strong>Tem peça sob encomenda na sacola.</strong> ' + esc(LOJA.avisoEncomenda) + '</p>' : "") +
           '</div>' +
 
-          '<form class="resumo-box" data-fechar>' +
+          '<aside class="resumo-box">' +
             '<h2 style="margin-top:0;font-size:1.35rem">Resumo</h2>' +
             '<div class="resumo-linha"><span>Peças (' + sacola.quantidade() + ')</span><span>' + moeda(subtotal) + '</span></div>' +
             '<div class="resumo-linha"><span>Frete</span><span>' +
-              (freteGratis ? "grátis" : "calculado no WhatsApp") + '</span></div>' +
+              (freteGratis ? "grátis" : "calculado no próximo passo") + '</span></div>' +
             (freteGratis
               ? ''
               : '<p style="font-size:.85rem;color:var(--tinta-media);margin:4px 0 0">Faltam ' + moeda(falta) + ' para o frete sair de graça.</p>') +
@@ -438,32 +439,18 @@
             '<p style="font-size:.88rem;color:var(--verde);font-weight:600;margin:6px 0 0">' +
               moeda(precoPix(subtotal)) + ' pagando no Pix</p>' +
 
-            '<label for="f-nome">Seu nome</label>' +
-            '<input id="f-nome" name="nome" required autocomplete="name" placeholder="Como devemos te chamar">' +
+            '<a class="botao botao--principal botao--largo" href="checkout.html" style="margin-top:20px">Fechar pedido</a>' +
 
-            '<label for="f-entrega">Como você quer receber</label>' +
-            '<select id="f-entrega" name="entrega">' +
-              '<option value="Correios">Receber em casa pelos Correios</option>' +
-              '<option value="Retirada na feira de Boiçucanga">Retirar na feira de Boiçucanga (sem frete)</option>' +
-            '</select>' +
+            '<p style="text-align:center;margin:14px 0 0;font-size:.9rem">' +
+              'ou <a href="' + linkZap(mensagemSacolaSimples()) + '">combinar tudo pelo WhatsApp</a></p>' +
 
-            '<label for="f-cep">CEP (para calcular o frete)</label>' +
-            '<input id="f-cep" name="cep" inputmode="numeric" placeholder="00000-000">' +
-
-            '<label for="f-pagamento">Forma de pagamento</label>' +
-            '<select id="f-pagamento" name="pagamento">' +
-              '<option value="Pix">Pix (' + Math.round((LOJA.descontoPix || 0) * 100) + '% de desconto)</option>' +
-              '<option value="Cartão">Cartão em até ' + LOJA.parcelamento.maxParcelas + 'x</option>' +
-              '<option value="Dinheiro na feira">Dinheiro, na retirada</option>' +
-            '</select>' +
-
-            '<label for="f-obs">Quer pedir alguma coisa? (opcional)</label>' +
-            '<textarea id="f-obs" name="obs" placeholder="Cor preferida, presente para alguém, prazo…"></textarea>' +
-
-            '<button class="botao botao--zap botao--largo" type="submit" style="margin-top:18px">Fechar pedido no WhatsApp</button>' +
-            '<p style="font-size:.82rem;color:var(--tinta-media);margin:12px 0 0;text-align:center">' +
-              'O pedido é conferido com você pelo WhatsApp antes de qualquer pagamento. Nada é cobrado aqui no site.</p>' +
-          '</form>' +
+            '<ul class="garantias">' +
+              '<li>Pix com ' + Math.round((LOJA.descontoPix || 0) * 100) + '% de desconto, direto no site</li>' +
+              '<li>Cartão em até ' + LOJA.parcelamento.maxParcelas + 'x</li>' +
+              '<li>Retirada na feira sem frete</li>' +
+              '<li>7 dias para desistir, como manda a lei</li>' +
+            '</ul>' +
+          '</aside>' +
         '</div>';
     }
 
@@ -475,39 +462,19 @@
       if (alvoBotao.dataset.remover) sacola.remover(alvoBotao.dataset.remover);
     });
 
-    alvo.addEventListener("submit", function (ev) {
-      if (!ev.target.matches("[data-fechar]")) return;
-      ev.preventDefault();
-      var dados = new FormData(ev.target);
-      window.open(linkZap(mensagemPedido(dados)), "_blank", "noopener");
-    });
-
     document.addEventListener("sacola:mudou", desenhar);
     desenhar();
   }
 
-  function mensagemPedido(dados) {
+  function mensagemSacolaSimples() {
     var itens = sacola.itens();
-    var subtotal = sacola.subtotal();
-    var pagamento = dados.get("pagamento");
-    var linhas = [
-      "Olá, Lúcia! Quero fechar um pedido pelo site.",
-      "",
-      "*Peças*"
-    ];
+    if (!itens.length) return "Oi! Queria falar sobre um pedido.";
+    var linhas = ["Olá, Lúcia! Queria fechar um pedido com estas peças:", ""];
     itens.forEach(function (i) {
-      linhas.push("• " + i.qtd + "x " + i.produto.nome + " — " + moeda(i.subtotal) +
-        (i.produto.disponibilidade === "sob-encomenda" ? " (sob encomenda)" : ""));
+      linhas.push("• " + i.qtd + "x " + i.produto.nome + " — " + moeda(i.subtotal));
     });
     linhas.push("");
-    linhas.push("*Total das peças:* " + moeda(subtotal));
-    if (pagamento === "Pix") linhas.push("*Com desconto do Pix:* " + moeda(precoPix(subtotal)));
-    linhas.push("");
-    linhas.push("*Nome:* " + (dados.get("nome") || "-"));
-    linhas.push("*Entrega:* " + dados.get("entrega"));
-    if (dados.get("cep")) linhas.push("*CEP:* " + dados.get("cep"));
-    linhas.push("*Pagamento:* " + pagamento);
-    if (dados.get("obs")) { linhas.push(""); linhas.push("*Observação:* " + dados.get("obs")); }
+    linhas.push("*Total das peças:* " + moeda(sacola.subtotal()));
     return linhas.join("\n");
   }
 
