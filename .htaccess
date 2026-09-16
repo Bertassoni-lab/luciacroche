@@ -1,0 +1,34 @@
+# ============================================================
+# Lúcia Maria Crochê — configuração do servidor
+# ============================================================
+
+# --- Domínios temporários não devem aparecer no Google ------
+# Enquanto o site estiver num endereço de teste, mandamos os
+# buscadores ignorarem. No domínio oficial, nada disso vale.
+SetEnvIf Host "okgo\.dev\.br$"        SITE_TEMPORARIO=1
+SetEnvIf Host "hostingersite\.com$"   SITE_TEMPORARIO=1
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow" env=SITE_TEMPORARIO
+
+  # --- Segurança básica ------------------------------------
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# --- Página de erro própria ---------------------------------
+ErrorDocument 404 /404.html
+
+# --- Não listar o conteúdo das pastas -----------------------
+Options -Indexes
+
+# --- Cache das imagens e do visual --------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png  "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType text/css   "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+</IfModule>

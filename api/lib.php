@@ -13,8 +13,25 @@ function lmc_config(): array
     static $config = null;
     if ($config === null) {
         $config = require __DIR__ . '/config.php';
+        $config['site'] = lmc_endereco_do_site($config['site'] ?? '');
     }
     return $config;
+}
+
+/**
+ * Descobre em que endereço o site está rodando de verdade.
+ * Assim o mesmo código funciona no domínio temporário e no oficial,
+ * sem precisar editar nada quando o domínio for apontado.
+ */
+function lmc_endereco_do_site(string $configurado): string
+{
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if ($host === '' || !preg_match('/^[a-z0-9.\-]+(:\d+)?$/i', $host)) {
+        return $configurado;
+    }
+    $protocolo = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') ? 'https' : 'http';
+    return $protocolo . '://' . $host;
 }
 
 /* ---------------- Armazenamento ---------------- */

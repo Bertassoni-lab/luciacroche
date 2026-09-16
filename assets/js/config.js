@@ -71,5 +71,11 @@ window.LOJA = {
 
   /* ---- Textos do site -------------------------------------- */
   avisoEncomenda: "Peça sob encomenda: a Lúcia começa a sua depois da confirmação do pagamento.",
+  // Endereço oficial. Em outro domínio (temporário, teste), o site usa o
+  // endereço em que está aberto — não precisa editar nada aqui.
   site: "https://luciamariacroche.com.br"
 };
+
+if (typeof location !== "undefined" && location.origin && location.origin.indexOf("http") === 0) {
+  window.LOJA.site = location.origin;
+}
