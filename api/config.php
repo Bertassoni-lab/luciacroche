@@ -9,11 +9,10 @@
 return [
 
     /* ---- Painel -------------------------------------------- */
-    // Senha de acesso ao painel, guardada como hash.
-    // Para trocar: abra painel/senha.php no navegador, digite a nova
+    // Senha de acesso ao painel, guardada como hash (nunca em texto).
+    // Para trocar: entre no painel, abra painel/senha.php, digite a nova
     // senha, copie o resultado e cole aqui dentro das aspas.
-    // A senha inicial é: croche2026  (TROQUE na primeira semana)
-    'painel_senha_hash' => '$2y$12$GwLNzcccV06FSfe/JP1As.ppYnM6CwaQi1JlmJzDesZvyGQWAMdka',
+    'painel_senha_hash' => '$2y$12$r0pPIV6N3eTjIyPDwosYX.48aqa4mismD7pK9lMJx4xoWY7wJYPNC',
 
     /* ---- Pix ----------------------------------------------- */
     'pix' => [

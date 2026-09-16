@@ -1,8 +1,8 @@
 # O painel do ateliê
 
 Endereço: **luciamariacroche.com.br/painel**
-Senha inicial: **`croche2026`** — troque na primeira semana, em
-`painel/senha.php` (o link aparece depois de entrar).
+A senha é gerada na instalação e entregue à parte — **nunca fica escrita
+na documentação**. Para trocar: entre no painel e abra `painel/senha.php`.
 
 O painel não aparece no menu do site, não vai para o Google e só abre com senha.
 
@@ -155,7 +155,7 @@ Duas coisas, e nenhuma delas é “ter um blog”:
 
 ## Cuidados
 
-- **Troque a senha inicial** em `painel/senha.php`.
+- **Troque a senha** em `painel/senha.php` de tempos em tempos.
 - **Baixe a pasta `dados-privados` uma vez por mês.** É todo o histórico financeiro e
   a lista de clientes. Se o servidor sumir sem backup, não tem como recuperar.
 - Não mande o endereço do painel em grupo de WhatsApp nem deixe a senha anotada na

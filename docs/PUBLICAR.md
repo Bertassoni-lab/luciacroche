@@ -79,13 +79,13 @@ em que a pessoa vai pagar — e ela desiste.
 
 ## 5. Trocar a senha do painel
 
-1. Abra `luciamariacroche.com.br/painel` e entre com a senha inicial **`croche2026`**.
+1. Abra `luciamariacroche.com.br/painel` e entre com a senha que você recebeu à parte.
 2. Vá em `painel/senha.php`, digite a senha nova e copie o texto que aparece.
 3. No gerenciador de arquivos, abra `api/config.php`, substitua a linha
    `'painel_senha_hash' => '...'` pela que você copiou e salve.
 
-**Não pule este passo.** A senha inicial está escrita nesta documentação, que é
-pública no repositório.
+**Troque assim que possível**, e nunca escreva a senha em arquivo do repositório
+nem em grupo de WhatsApp.
 
 ---
 

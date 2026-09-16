@@ -42,7 +42,7 @@ uso interno da família.
 ```bash
 php -S localhost:8000
 # loja:   http://localhost:8000
-# painel: http://localhost:8000/painel  (senha inicial: croche2026)
+# painel: http://localhost:8000/painel
 ```
 
 Precisa de **PHP 8.1 ou superior** para o painel e o checkout. Só a loja (sem
@@ -50,8 +50,8 @@ checkout e sem painel) abre até clicando duas vezes em `index.html`.
 
 ## Antes de publicar
 
-1. **Troque a senha do painel.** A inicial é `croche2026` e está escrita aqui — gere
-   uma nova em `painel/senha.php` e cole em `api/config.php`.
+1. **Confira a senha do painel.** Ela é gerada na instalação e entregue à parte;
+   para trocar, use `painel/senha.php` e cole o resultado em `api/config.php`.
 2. Confira os dados em `assets/js/config.js` (WhatsApp, Instagram, chave Pix) e em
    `api/config.php` (Pix e, se for usar, Mercado Pago).
 3. Siga o [guia de publicação na Hostinger](docs/PUBLICAR.md).

@@ -17,6 +17,21 @@ SetEnvIf Host "hostingersite\.com$"   SITE_TEMPORARIO=1
   Header always set X-Frame-Options "SAMEORIGIN"
 </IfModule>
 
+# --- Documentação e arquivos internos não são públicos ------
+# O deploy traz o repositório inteiro, inclusive a pasta docs e o
+# README. Eles são para quem cuida do site, não para visitantes.
+<FilesMatch "\.(md|json|lock|yml|yaml|sh|py)$">
+  Require all denied
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+RedirectMatch 404 ^/docs(/.*)?$
+RedirectMatch 404 ^/\.git(/.*)?$
+RedirectMatch 404 ^/\.gitignore$
+
 # --- Página de erro própria ---------------------------------
 ErrorDocument 404 /404.html
 
