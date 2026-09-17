@@ -38,7 +38,12 @@
       </div>
     </div>
     <div class="capa__foto">
-      <img src="assets/img/produtos/bolsa-chevron-por-do-sol.jpg" alt="Bolsa de crochê laranja com zigue-zague em cru e alças de couro" width="1200" height="1200" fetchpriority="high">
+      <img src="assets/img/produtos/bolsa-chevron-por-do-sol.jpg"
+           srcset="assets/img/produtos/bolsa-chevron-por-do-sol-600.jpg 600w,
+                   assets/img/produtos/bolsa-chevron-por-do-sol.jpg 1200w"
+           sizes="(max-width: 800px) 92vw, 46vw"
+           alt="Bolsa de crochê laranja com zigue-zague em cru e alças de couro"
+           width="1200" height="1200" fetchpriority="high">
       <p class="capa__legenda"><strong>Bolsa Chevron Pôr do Sol</strong>26 horas de crochê, alça de couro rebitada.</p>
     </div>
   </div>
@@ -117,6 +122,7 @@
 </a>
 <script src="assets/js/config.js"></script>
 <script src="dados/produtos.js"></script>
+<script src="dados/estoque.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

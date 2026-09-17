@@ -7,7 +7,18 @@
 
   var LOJA = window.LOJA || {};
   var CATALOGO = window.CATALOGO || { produtos: [], categorias: [] };
+  var ESTOQUE = window.ESTOQUE || { vendidas: [] };
   var CHAVE_SACOLA = "lmc:sacola:v1";
+
+  /** Peça única que já foi embora com alguém. */
+  function vendida(id) {
+    return (ESTOQUE.vendidas || []).indexOf(id) >= 0;
+  }
+
+  /** O que ainda dá para comprar. */
+  function disponiveis() {
+    return CATALOGO.produtos.filter(function (p) { return !vendida(p.id); });
+  }
 
   /* ---------------- utilidades ---------------- */
 
@@ -43,7 +54,9 @@
       try {
         var bruto = localStorage.getItem(CHAVE_SACOLA);
         var lista = bruto ? JSON.parse(bruto) : [];
-        return Array.isArray(lista) ? lista.filter(function (i) { return produto(i.id); }) : [];
+        return Array.isArray(lista)
+          ? lista.filter(function (i) { return produto(i.id) && !vendida(i.id); })
+          : [];
       } catch (e) {
         return [];
       }
@@ -138,7 +151,8 @@
         '<a class="sacola-btn" href="carrinho.html">' +
           '<svg width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7">' +
           '<path d="M3 6h14l-1.2 11H4.2L3 6Z"/><path d="M7 6V4.5a3 3 0 0 1 6 0V6"/></svg>' +
-          'Sacola <span class="sacola-btn__n" data-sacola-n hidden>0</span>' +
+          '<span class="sacola-btn__rotulo">Sacola</span>' +
+          '<span class="sacola-btn__n" data-sacola-n hidden>0</span>' +
         '</a>' +
       '</div>';
 
@@ -193,7 +207,8 @@
 
   function figura(p, classe) {
     if (p.imagem) {
-      return '<img src="' + esc(p.thumb || p.imagem) + '" alt="' + esc(p.alt || p.nome) + '" loading="lazy" width="600" height="600">';
+      return '<img src="' + esc(p.thumb || p.imagem) + '" alt="' + esc(p.alt || p.nome) + '"' +
+        ' loading="lazy" decoding="async" sizes="(max-width: 560px) 46vw, 260px" width="600" height="600">';
     }
     return '<div class="' + (classe || "cartao__sem-foto") + '">' +
       '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">' +
@@ -202,6 +217,7 @@
   }
 
   function etiqueta(p) {
+    if (vendida(p.id)) return '<span class="etiqueta etiqueta--vendida">Vendida</span>';
     if (p.disponibilidade === "sob-encomenda") return '<span class="etiqueta etiqueta--encomenda">Sob encomenda</span>';
     if (p.colecao === "Aurora") return '<span class="etiqueta etiqueta--aurora">Coleção Aurora</span>';
     return '<span class="etiqueta">Pronta-entrega</span>';
@@ -234,7 +250,7 @@
   /* ---------------- páginas ---------------- */
 
   function paginaInicio() {
-    var destaques = CATALOGO.produtos.filter(function (p) { return p.destaque; }).slice(0, 4);
+    var destaques = disponiveis().filter(function (p) { return p.destaque; }).slice(0, 4);
     renderGrade("[data-destaques]", destaques);
   }
 
@@ -250,7 +266,7 @@
     }).join("");
 
     function aplicar(cat) {
-      renderGrade("[data-lista-produtos]", CATALOGO.produtos.filter(function (p) {
+      renderGrade("[data-lista-produtos]", disponiveis().filter(function (p) {
         return cat === "todos" || p.categoria === cat;
       }));
       [].forEach.call(filtros.querySelectorAll(".filtro"), function (b) {
@@ -291,11 +307,15 @@
     if (meta) meta.setAttribute("content", p.resumo);
 
     var encomenda = p.disponibilidade === "sob-encomenda";
+    var jaFoi = vendida(p.id);
     alvo.innerHTML =
       '<div class="produto">' +
         '<div class="produto__foto">' +
           (p.imagem
-            ? '<img src="' + esc(p.imagem) + '" alt="' + esc(p.alt || p.nome) + '" width="1200" height="1200">'
+            ? '<img src="' + esc(p.imagem) + '"' +
+              (p.thumb ? ' srcset="' + esc(p.thumb) + ' 600w, ' + esc(p.imagem) + ' 1200w"' +
+                         ' sizes="(max-width: 760px) 92vw, 46vw"' : '') +
+              ' alt="' + esc(p.alt || p.nome) + '" width="1200" height="1200" fetchpriority="high">'
             : figura(p)) +
         '</div>' +
         '<div>' +
@@ -309,13 +329,20 @@
               : '') +
           '</p>' +
           '<p>' + esc(p.descricao) + '</p>' +
-          (encomenda
+          (jaFoi
+            ? '<p class="aviso aviso--vendida"><strong>Esta peça já foi vendida.</strong> ' +
+              'Cada uma é única, então não existe outra igual a esta — mas a Lúcia faz uma parecida ' +
+              'na cor que você quiser, em cerca de 15 dias.</p>'
+            : encomenda
             ? '<p class="aviso"><strong>Feita só depois do pedido.</strong> ' + esc(LOJA.avisoEncomenda) +
               ' Prazo de produção: cerca de ' + (p.prazoEncomendaDias || 15) + ' dias, e o envio começa a contar depois disso.</p>'
             : '<p class="aviso"><strong>Peça única, pronta para enviar.</strong> É a única igual a esta — quando sai, sai de vez.</p>') +
           '<div class="produto__acoes">' +
-            '<button class="botao botao--principal" type="button" data-add="' + esc(p.id) + '">Colocar na sacola</button>' +
-            '<a class="botao botao--zap" href="' + linkZap("Oi! Tenho interesse na peça “" + p.nome + "” (" + moeda(p.preco) + "). Ainda está disponível?") + '">Perguntar no WhatsApp</a>' +
+            (jaFoi
+              ? '<a class="botao botao--principal" href="' + linkZap("Oi! Vi que a peça “" + p.nome + "” já foi vendida. Dá para fazer uma parecida?") + '">Encomendar uma parecida</a>' +
+                '<a class="botao botao--contorno" href="produtos.html">Ver o que está pronto</a>'
+              : '<button class="botao botao--principal" type="button" data-add="' + esc(p.id) + '">Colocar na sacola</button>' +
+                '<a class="botao botao--zap" href="' + linkZap("Oi! Tenho interesse na peça “" + p.nome + "” (" + moeda(p.preco) + "). Ainda está disponível?") + '">Perguntar no WhatsApp</a>') +
           '</div>' +
           '<div class="ficha"><dl>' +
             linhaFicha("Medidas", p.medidas) +
@@ -333,11 +360,11 @@
 
     dadosEstruturados(p);
 
-    var relacionados = CATALOGO.produtos.filter(function (o) {
+    var relacionados = disponiveis().filter(function (o) {
       return o.id !== p.id && o.categoria === p.categoria;
     });
     if (relacionados.length < 3) {
-      relacionados = relacionados.concat(CATALOGO.produtos.filter(function (o) {
+      relacionados = relacionados.concat(disponiveis().filter(function (o) {
         return o.id !== p.id && o.categoria !== p.categoria;
       }));
     }
@@ -366,9 +393,11 @@
         "@type": "Offer",
         price: p.preco.toFixed(2),
         priceCurrency: "BRL",
-        availability: p.disponibilidade === "sob-encomenda"
-          ? "https://schema.org/PreOrder"
-          : "https://schema.org/InStock",
+        availability: vendida(p.id)
+          ? "https://schema.org/SoldOut"
+          : (p.disponibilidade === "sob-encomenda"
+            ? "https://schema.org/PreOrder"
+            : "https://schema.org/InStock"),
         itemCondition: "https://schema.org/NewCondition"
       }
     };
@@ -523,7 +552,8 @@
     if (typeof window.aoCarregarPagina === "function") window.aoCarregarPagina({ moeda: moeda, esc: esc, linkZap: linkZap, LOJA: LOJA, CATALOGO: CATALOGO });
   }
 
-  window.LMC = { moeda: moeda, esc: esc, linkZap: linkZap, sacola: sacola, produto: produto, precoPix: precoPix };
+  window.LMC = { moeda: moeda, esc: esc, linkZap: linkZap, sacola: sacola,
+                 produto: produto, precoPix: precoPix, vendida: vendida, disponiveis: disponiveis };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", iniciar);

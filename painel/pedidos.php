@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/comum.php';
+require __DIR__ . '/../api/estoque.php';
 lmc_exige_login();
 
 $recado = '';
@@ -32,6 +33,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 $pedidos[$i]['enviadoEm'] = date('c');
             }
             $recado = 'Pedido ' . $id . ' agora está como “' . p_status_nome($novo) . '”.';
+
+            // Peça única sai do estoque quando o pedido é pago, e volta se for cancelado.
+            if (in_array($novo, ['pago', 'enviado', 'entregue'], true)) {
+                $marcadas = lmc_baixar_estoque_do_pedido($pedidos[$i]);
+                if ($marcadas) {
+                    $recado .= ' Saíram da loja: ' . implode(', ', $marcadas) . '.';
+                }
+            }
+            if ($novo === 'cancelado') {
+                $devolvidas = lmc_devolver_estoque_do_pedido($pedidos[$i]);
+                if ($devolvidas) {
+                    $recado .= ' Voltaram para a loja: ' . implode(', ', $devolvidas) . '.';
+                }
+            }
         }
         lmc_gravar('pedidos.json', $pedidos);
     }

@@ -237,6 +237,7 @@ function p_cabecalho(string $titulo, string $paginaAtual): void
     $menu = [
         'index.php'      => 'Visão geral',
         'pedidos.php'    => 'Pedidos',
+        'estoque.php'    => 'Estoque',
         'financeiro.php' => 'Financeiro',
         'marketing.php'  => 'Marketing',
         'blog.php'       => 'Diário',

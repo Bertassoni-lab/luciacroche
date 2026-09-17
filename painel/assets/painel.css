@@ -23,13 +23,15 @@ img { max-width: 100%; display: block; }
 .p-topo { background: var(--tinta); color: #f0e7dd; padding: 14px 0; position: sticky; top: 0; z-index: 20; }
 .p-topo .env { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .p-marca { font-family: var(--serif); font-size: 1.05rem; color: #fff; text-decoration: none; margin-right: auto; }
-.p-marca small { display: block; font-family: var(--sans); font-size: .68rem; letter-spacing: .12em;
+.p-marca small { display: block; font-family: var(--sans); font-size: .75rem; letter-spacing: .1em;
   text-transform: uppercase; color: #a3968b; }
 .p-menu { display: flex; gap: 3px; flex-wrap: wrap; }
-.p-menu a { color: #d9cec4; text-decoration: none; padding: 7px 13px; border-radius: 99px; font-size: .92rem; font-weight: 500; }
+.p-menu a { color: #d9cec4; text-decoration: none; padding: 11px 15px; border-radius: 99px;
+  font-size: .92rem; font-weight: 500; min-height: 44px; display: inline-flex; align-items: center; }
 .p-menu a:hover { background: rgba(255,255,255,.1); color: #fff; }
 .p-menu a.ativo { background: var(--terracota); color: #fff; }
-.p-sair { color: #a3968b; font-size: .85rem; text-decoration: none; }
+.p-sair { color: #a3968b; font-size: .85rem; text-decoration: none;
+  min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; }
 
 main { padding: 30px 0 70px; }
 
@@ -46,6 +48,8 @@ main { padding: 30px 0 70px; }
 .painel-caixa h2 { margin-top: 0; }
 .duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
 .tres-colunas { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start; }
+/* Sem isto, a coluna cresce até o tamanho do conteúdo e estoura a tela do celular. */
+.duas-colunas > *, .tres-colunas > * { min-width: 0; }
 
 /* tabela */
 table.p-tabela { width: 100%; border-collapse: collapse; font-size: .92rem; }
@@ -67,9 +71,11 @@ table.p-tabela { width: 100%; border-collapse: collapse; font-size: .92rem; }
 /* formulários */
 label { display: block; font-weight: 600; font-size: .88rem; margin: 14px 0 5px; }
 input, select, textarea {
-  width: 100%; font: inherit; font-size: .95rem; padding: 10px 12px;
+  width: 100%; font: inherit; font-size: 16px; padding: 12px 13px; min-height: 46px;
   border: 1px solid var(--borda); border-radius: 8px; background: var(--branco); color: var(--tinta);
 }
+/* 16px nos campos evita que o iPhone dê zoom sozinho ao tocar. */
+textarea { min-height: 110px; }
 textarea { min-height: 110px; resize: vertical; }
 textarea.grande { min-height: 380px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88rem; line-height: 1.7; }
 .linha-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0 16px; }
@@ -82,7 +88,7 @@ textarea.grande { min-height: 380px; font-family: ui-monospace, SFMono-Regular, 
 .botao--verde { background: var(--verde); color: #fff; }
 .botao--contorno { background: var(--branco); border-color: var(--borda); color: var(--tinta); }
 .botao--contorno:hover { border-color: var(--tinta); }
-.botao--pequeno { padding: 6px 13px; font-size: .84rem; }
+.botao--pequeno { padding: 10px 16px; font-size: .84rem; min-height: 44px; }
 .botao--largo { width: 100%; }
 
 /* avisos */
@@ -111,11 +117,47 @@ textarea.grande { min-height: 380px; font-family: ui-monospace, SFMono-Regular, 
 
 .dica { font-size: .84rem; color: var(--tinta-media); margin: 6px 0 0; }
 .lista-simples { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-.lista-simples li { display: flex; gap: 12px; align-items: baseline; justify-content: space-between;
-  border-bottom: 1px solid var(--borda); padding-bottom: 9px; font-size: .93rem; }
+.lista-simples li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline;
+  justify-content: space-between; border-bottom: 1px solid var(--borda); padding-bottom: 9px; font-size: .93rem; }
+.lista-simples li > * { min-width: 0; }
+/* Links e ações dentro das listas do painel precisam de área para o dedo. */
+.lista-simples a, .lista-simples button {
+  min-height: 40px; display: inline-flex; align-items: center; padding: 4px 0;
+}
+.lista-simples a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 @media (max-width: 820px) {
   .duas-colunas, .tres-colunas { grid-template-columns: 1fr; }
-  .p-topo .env { gap: 10px; }
-  .p-menu { order: 3; width: 100%; }
+  .p-topo .env { gap: 8px 10px; }
+
+  /* Menu numa faixa só, que desliza com o dedo em vez de ocupar duas linhas. */
+  .p-menu {
+    order: 3; width: 100%; flex-wrap: nowrap; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    padding-bottom: 2px; margin-bottom: -2px;
+  }
+  .p-menu::-webkit-scrollbar { display: none; }
+  .p-menu a { white-space: nowrap; flex: none; }
+
+  main { padding: 20px 0 60px; }
+  .painel-caixa { padding: 18px 16px; }
+  .kpi { padding: 16px 17px; }
+  .p-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .kpi__valor { font-size: 1.5rem; }
+
+  /* Tabela larga: deixa claro que dá para arrastar de lado. */
+  .rolagem { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rolagem table { min-width: 460px; }
+  .p-tabela th, .p-tabela td { padding: 12px 10px; }
+  /* Linha de tabela no celular: o link ocupa a célula inteira, fica fácil de acertar. */
+  .p-tabela td a { display: inline-block; padding: 6px 0; }
+
+  .linha-campos { grid-template-columns: 1fr; }
+  h1 { font-size: 1.5rem; }
+}
+
+@media (max-width: 420px) {
+  .p-kpis { grid-template-columns: 1fr 1fr; }
+  .kpi__valor { font-size: 1.32rem; }
+  .kpi__rotulo { font-size: .76rem; }
 }

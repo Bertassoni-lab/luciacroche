@@ -31,7 +31,12 @@
       body: JSON.stringify(corpo || {})
     }).then(function (r) {
       return r.json().then(function (d) {
-        if (!r.ok) throw new Error(d.erro || "Não consegui falar com o servidor.");
+        if (!r.ok) {
+          var erro = new Error(d.erro || "Não consegui falar com o servidor.");
+          erro.status = r.status;
+          erro.vendida = d.vendida;
+          throw erro;
+        }
         return d;
       });
     });
@@ -47,6 +52,23 @@
   /* ---------------- cálculos ---------------- */
 
   function itens() { return sacola.itens(); }
+
+  /** Se uma peça da sacola saiu enquanto a pessoa decidia, avisa em vez de deixar pagar. */
+  function conferirEstoque() {
+    var vendidas = sacola.ler().filter(function (i) { return window.LMC.vendida(i.id); });
+    if (!vendidas.length) return true;
+    var nomes = vendidas.map(function (i) {
+      var p = window.LMC.produto(i.id);
+      return p ? p.nome : i.id;
+    });
+    vendidas.forEach(function (i) { sacola.remover(i.id); });
+    alert('Enquanto você escolhia, ' + (nomes.length === 1 ? 'esta peça foi vendida' : 'estas peças foram vendidas') +
+          ': ' + nomes.join(', ') + '. Cada uma é única, então tirei da sacola. ' +
+          'A Lúcia faz uma parecida se você quiser — é só chamar no WhatsApp.');
+    estado.passo = 1;
+    desenhar();
+    return false;
+  }
   function subtotal() { return sacola.subtotal(); }
   function peso() {
     return itens().reduce(function (s, i) { return s + (i.produto.pesoGramas || 400) * i.qtd; }, 0);
@@ -316,6 +338,7 @@
   /** Cria o pedido no servidor (ou monta um pedido local, se não houver servidor). */
   function garantirPedido() {
     if (estado.pedido) return Promise.resolve(estado.pedido);
+    if (!conferirEstoque()) return Promise.reject(new Error('peça vendida'));
 
     var corpo = {
       cliente: { nome: estado.dados.nome, whatsapp: estado.dados.whatsapp, email: estado.dados.email },
@@ -330,7 +353,15 @@
 
     return api("api/pedido.php", corpo)
       .then(function (d) { estado.pedido = d; return d; })
-      .catch(function () {
+      .catch(function (erro) {
+        // O servidor recusou porque a peça acabou de sair: avisa e volta.
+        if (erro && erro.status === 409) {
+          alert(erro.message);
+          if (erro.vendida) sacola.remover(erro.vendida);
+          estado.passo = 1;
+          desenhar();
+          throw erro;
+        }
         // Sem servidor (pré-visualização local): monta o Pix aqui mesmo.
         var id = "LMC" + Date.now().toString(36).toUpperCase().slice(-7);
         estado.pedido = {

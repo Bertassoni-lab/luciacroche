@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/lib.php';
 require __DIR__ . '/catalogo.php';
+require __DIR__ . '/estoque.php';
 
 header('Access-Control-Allow-Origin: ' . (lmc_config()['site'] ?? '*'));
 
@@ -36,6 +37,18 @@ foreach ($itensEntrada as $bruto) {
 
     if ($produto === null) {
         lmc_json_resposta(['erro' => 'Peça não encontrada: ' . $id], 422);
+    }
+
+    // Peça única que já saiu não pode ser vendida de novo.
+    if (lmc_e_peca_unica($produto) && lmc_esta_vendida($id)) {
+        lmc_json_resposta([
+            'erro'    => 'A peça “' . $produto['nome'] . '” já foi vendida — cada uma é única. '
+                       . 'Fale com a gente no WhatsApp que a Lúcia faz outra parecida.',
+            'vendida' => $id,
+        ], 409);
+    }
+    if (lmc_e_peca_unica($produto) && $qtd > 1) {
+        $qtd = 1; // só existe uma de cada
     }
 
     $preco = lmc_dinheiro($produto['preco']);

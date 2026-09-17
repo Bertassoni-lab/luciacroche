@@ -163,3 +163,36 @@ Duas coisas, e nenhuma delas é “ter um blog”:
 - Lista de clientes é dado pessoal: guardem porque é útil para vocês, não repassem
   para ninguém, e tirem quem pedir para sair. Isso é o que a LGPD espera de qualquer
   negócio, do tamanho que for.
+
+---
+
+## Estoque
+
+**Esta é a tela que impede a mesma bolsa de ser vendida duas vezes.**
+
+Quase tudo no ateliê é peça única. Quando uma sai — pelo site, na feira ou por
+encomenda — ela precisa sumir da loja na mesma hora, senão outra pessoa compra o que
+já foi embora. Isso acontece sozinho na maior parte das vezes:
+
+| O que acontece | O que o sistema faz |
+|---|---|
+| Pedido marcado como **pago** no painel | dá baixa sozinho nas peças únicas daquele pedido |
+| Pedido **cancelado** | devolve as peças para a loja |
+| Peça vendida **na feira** | você marca à mão aqui, em "marcar vendida" |
+| Peça **sob encomenda** | nunca acaba: a Lúcia faz outra |
+| A Lúcia fez outra igual | "voltar para a loja" na lista de vendidas |
+
+O que a pessoa vê quando uma peça sai: ela some da vitrine, e quem tiver o link
+direto encontra a página com **"esta peça já foi vendida"** e um botão para encomendar
+uma parecida — em vez de um botão de comprar que ia dar errado.
+
+E tem uma trava a mais no servidor: se duas pessoas estiverem comprando a mesma peça
+ao mesmo tempo, a segunda recebe um recado explicando, em vez de pagar por algo que
+não existe mais.
+
+### O número que vale olhar
+
+**Valor parado na prateleira** é quanto tem de peça pronta esperando comprador. Se
+estiver alto, a Lúcia está produzindo mais do que vende; se estiver perto de zero,
+a loja vai ficar vazia justo quando alguém chegar. No meio da temporada, o ideal é
+sempre ter de 5 a 8 peças prontas no site.
